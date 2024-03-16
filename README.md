@@ -38,7 +38,7 @@ mkdir -p ~/Clones # Or specify another directory, see below.
 ## Usage
 
 ```bash
-clone URL
+clone [git-clone-options] <repository>
 ```
 
 By default `clone` uses the `~/Clones` directory. Use the `CLONE_BASE_DIR` environment variable to specify another directory:
