@@ -1,0 +1,37 @@
+#!/bin/sh
+set -eu
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $(basename "${0}") URL"
+    exit 1
+fi
+
+case ${1} in
+    *://*/*/*)
+        # https://git.sr.ht/~maxmouchet/website
+        # host=git.sr.ht, user=~maxmouchet, repo=website
+        host=$(echo "${1}" | cut -d "/" -f 3)
+        user=$(echo "${1}" | cut -d "/" -f 4)
+        repo=$(echo "${1}" | cut -d "/" -f 5)
+        ;;
+    *@*:*/*)
+        # git@github.com:maxmouchet/HMMBase.jl.git
+        # host=github.com, user=maxmouchet, repo=HMMBase.jl.git
+        all=$(echo "${1}" | cut -d "@" -f 2)
+        host=$(echo "${all}" | cut -d ":" -f 1)
+        user=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 1)
+        repo=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 2)
+        ;;
+    *)
+        echo "Unsupported URL: ${1}"
+        exit 1
+        ;;
+esac
+
+basedir=${CLONE_BASE_DIR:-$HOME/Clones}
+target="${basedir}/${host}/${user#\~}/${repo%.git}"
+git clone "${1}" "${target}"
+
+if command -v autojump > /dev/null; then
+    autojump --add "${target}"
+fi

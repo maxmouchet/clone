@@ -1,0 +1,28 @@
+#!/bin/bash
+set -eu
+export CLONE_BASE_DIR=$(mktemp -d)
+
+urls=(
+    https://github.com/octocat/Hello-World
+    https://git.sr.ht/~sircmpwn/git.sr.ht
+)
+
+dirs=(
+    "$CLONE_BASE_DIR/github.com/octocat/Hello-World"
+    "$CLONE_BASE_DIR/git.sr.ht/sircmpwn/git.sr.ht"
+)
+
+for url in ${urls[@]}; do
+    ./clone $url
+done
+
+tree -L 3 $CLONE_BASE_DIR
+
+for dir in ${dirs[@]}; do
+    if [ ! -d $dir ]; then
+        echo "$dir not found"
+        exit 1
+    fi
+done
+
+rm -rf $CLONE_BASE_DIR
