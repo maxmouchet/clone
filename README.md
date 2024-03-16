@@ -26,6 +26,35 @@ j spoon
 # ~/Clones/github.com/octocat/Spoon-Knife
 ```
 
+## Preparing Your Environment
+
+To check if ~/.local/bin is included in your PATH, run the following command. The absence of output indicates that it is not:
+
+```bash
+echo $PATH | grep -o ~/.local/bin
+```
+
+If ~/.local/bin does not exist on your system, create it using:
+
+```bash
+mkdir -p ~/.local/bin
+```
+
+To ensure that executables in ~/.local/bin are accessible from any terminal session, add this directory to your PATH. Do this by adding the following line to your shell's configuration file (e.g., ~/.bashrc, ~/.zshrc, etc.):
+
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+To apply the changes, reload your shell configuration:
+
+```bash
+source ~/.bashrc  # Or the relevant file for your shell, such as .zshrc
+```
+
+Now, ~/.local/bin is ready for use. You may proceed with the installation instructions.
+
 ## Installation
 
 ```bash
