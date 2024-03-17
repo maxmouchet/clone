@@ -26,35 +26,6 @@ j spoon
 # ~/Clones/github.com/octocat/Spoon-Knife
 ```
 
-## Preparing Your Environment
-
-To check if ~/.local/bin is included in your PATH, run the following command. The absence of output indicates that it is not:
-
-```bash
-echo $PATH | grep -o ~/.local/bin
-```
-
-If ~/.local/bin does not exist on your system, create it using:
-
-```bash
-mkdir -p ~/.local/bin
-```
-
-To ensure that executables in ~/.local/bin are accessible from any terminal session, add this directory to your PATH. Do this by adding the following line to your shell's configuration file (e.g., ~/.bashrc, ~/.zshrc, etc.):
-
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-To apply the changes, reload your shell configuration:
-
-```bash
-source ~/.bashrc  # Or the relevant file for your shell, such as .zshrc
-```
-
-Now, ~/.local/bin is ready for use. You may proceed with the installation instructions.
-
 ## Installation
 
 ```bash
@@ -76,3 +47,33 @@ export CLONE_BASE_DIR=/tmp/clones
 clone git@github.com:octocat/Spoon-Knife.git
 # Cloning into '/tmp/clones/github.com/octocat/Spoon-Knife'...
 ```
+
+## Help
+
+If you encounter an error when executing the curl command to install clone, it may be due to `~/.local/bin` not existing on your system or not being included in your PATH. Follow the steps below to resolve these issues:
+
+### Ensuring `~/.local/bin Exists`
+
+If `~/.local/bin` does not exist on your system, create it using:
+
+```bash
+mkdir -p ~/.local/bin
+```
+
+This directory is used by clone to store executable scripts and should be included in your system's PATH for easy access.
+
+### Adding `~/.local/bin` to Your PATH
+
+To make sure executables in `~/.local/bin` are accessible from any terminal session, you'll need to add this directory to your PATH. You can do this by appending the following line to your shell's configuration file (e.g., ~/.bashrc, ~/.zshrc, etc.):
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+After adding the line, reload your shell configuration to apply the changes:
+
+```bash
+source ~/.bashrc  # Or the relevant file for your shell, such as .zshrc
+```
+
+By following these steps, you should be able to successfully run the curl command to install clone and execute it from any location in your terminal.
