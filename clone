@@ -12,16 +12,16 @@ case ${url} in
         # https://git.sr.ht/~maxmouchet/website
         # host=git.sr.ht, user=~maxmouchet, repo=website
         host=$(echo "${url}" | cut -d "/" -f 3)
-        user=$(echo "${url}" | cut -d "/" -f 4)
-        repo=$(echo "${url}" | cut -d "/" -f 5)
+        path=$(echo "${url}" | cut -d "/" -f 4-)
+
         ;;
     *@*:*/*)
         # git@github.com:maxmouchet/HMMBase.jl.git
         # host=github.com, user=maxmouchet, repo=HMMBase.jl.git
         all=$(echo "${url}" | cut -d "@" -f 2)
         host=$(echo "${all}" | cut -d ":" -f 1)
-        user=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 1)
-        repo=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 2)
+        path=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 1-)
+
         ;;
     *)
         echo "Unsupported URL: ${url}"
@@ -30,7 +30,9 @@ case ${url} in
 esac
 
 basedir=${CLONE_BASE_DIR:-$HOME/Clones}
-target="${basedir}/${host}/${user#\~}/${repo%.git}"
+path="${path#\~}"
+target="${basedir}/${host}/${path%.git}"
+
 git clone "$@" "${target}"
 
 if command -v autojump > /dev/null; then
