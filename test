@@ -5,11 +5,13 @@ export CLONE_BASE_DIR=$(mktemp -d)
 urls=(
     https://github.com/octocat/Hello-World
     https://git.sr.ht/~sircmpwn/git.sr.ht
+    https://gitlab.com/gitlab-org/cells/router
 )
 
 dirs=(
     "$CLONE_BASE_DIR/github.com/octocat/Hello-World"
     "$CLONE_BASE_DIR/git.sr.ht/sircmpwn/git.sr.ht"
+    "$CLONE_BASE_DIR/gitlab.com/gitlab-org/cells/router"
 )
 
 for url in ${urls[@]}; do
