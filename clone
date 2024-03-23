@@ -1,40 +1,50 @@
 #!/bin/bash
-set -eu
 
-if [ "$#" -lt 1 ]; then
-    echo "usage: $(basename "${0}") [git-clone-options] <repository>"
-    exit 1
-fi
-
-url="${@: -1}"
-case ${url} in
-    *://*/*/*)
-        # https://git.sr.ht/~maxmouchet/website
-        # host=git.sr.ht, user=~maxmouchet, repo=website
-        host=$(echo "${url}" | cut -d "/" -f 3)
-        path=$(echo "${url}" | cut -d "/" -f 4-)
-
-        ;;
-    *@*:*/*)
-        # git@github.com:maxmouchet/HMMBase.jl.git
-        # host=github.com, user=maxmouchet, repo=HMMBase.jl.git
-        all=$(echo "${url}" | cut -d "@" -f 2)
-        host=$(echo "${all}" | cut -d ":" -f 1)
-        path=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 1-)
-
-        ;;
-    *)
-        echo "Unsupported URL: ${url}"
+function clone_main {
+    if [ "$#" -lt 1 ]; then
+        echo "usage: $(basename "${0}") [git-clone-options] <repository>"
         exit 1
-        ;;
-esac
+    fi
 
-basedir=${CLONE_BASE_DIR:-$HOME/Clones}
-path="${path#\~}"
-target="${basedir}/${host}/${path%.git}"
+    local basedir=${CLONE_BASE_DIR:-$HOME/Clones}
+    local path=$(clone_get_path ${@: -1})
+    local target="${basedir}/${path}"
 
-git clone "$@" "${target}"
+    git clone "$@" "${target}"
 
-if command -v autojump > /dev/null; then
-    autojump --add "${target}"
+    if command -v autojump > /dev/null; then
+        autojump --add "${target}"
+    fi
+}
+
+function clone_get_path {
+    local all host path url=$1
+    case ${url} in
+        *://*/*/*)
+            # https://git.sr.ht/~maxmouchet/website
+            # host=git.sr.ht, path=~/maxmouchet/website
+            host=$(echo "${url}" | cut -d "/" -f 3)
+            path=$(echo "${url}" | cut -d "/" -f 4-)
+            ;;
+        *@*:*/*)
+            # git@github.com:maxmouchet/HMMBase.jl.git
+            # host=github.com, path=maxmouchet/HMMBase.jl.git
+            all=$(echo "${url}" | cut -d "@" -f 2)
+            host=$(echo "${all}" | cut -d ":" -f 1)
+            path=$(echo "${all}" | cut -d ":" -f 2 | cut -d "/" -f 1-)
+            ;;
+        *)
+            echo "Unsupported URL: ${url}"
+            exit 1
+            ;;
+    esac
+    path="${path#\~}"
+    path="${path%.git}"
+    echo "${host}/${path}"
+}
+
+if [ "${#BASH_SOURCE[@]}" -eq 1 ]; then
+    set -o errexit
+    set -o nounset
+    clone_main "$@"
 fi
