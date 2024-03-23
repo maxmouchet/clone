@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eu
+source ./clone
+
+declare -A cases
+
+# cases[url]=path
+cases["https://github.com/octocat/Hello-World"]="github.com/octocat/Hello-World"
+cases["https://git.sr.ht/~sircmpwn/git.sr.ht"]="git.sr.ht/sircmpwn/git.sr.ht"
+cases["git@gitlab.com:gitlab-org/cells/router.git"]="gitlab.com/gitlab-org/cells/router"
+
+for url in "${!cases[@]}"; do
+    expected="${cases[$url]}"
+    result="$(clone_get_path $url)"
+    echo "---"
+    echo "url:      $url"
+    echo "result:   $result"
+    echo "expected: $expected"
+    if [[ "$result" != "$expected" ]]; then
+        exit 1
+    fi
+done
